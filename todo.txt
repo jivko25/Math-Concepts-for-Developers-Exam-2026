@@ -1,11 +1,11 @@
-1. Change interstellar example [] - extremely high priority
-2. Remove interstellar from the introduction [] - extremely high priority
-3. Increase the quality of the introduction and conclusion [] - medium priority
-4. Add theory of СТО [] - high priority
-5. Add the theory of OTO and add interstellar as an example [] - high priority
-6. Add text about time dilation reverse (from given time_0 and time_1 to return the speed of time_1) [] - medium priority
-7. Fix the numbering of the sections [] - high priority
-8. Don't forget to add more resources about CTO and OTO [] - high priority
-9. Try to draw an illustration about OTO [] - low priority
+1. Change interstellar example [X] - extremely high priority
+2. Remove interstellar from the introduction [X] - extremely high priority
+3. Increase the quality of the introduction and conclusion [X] - medium priority
+4. Add theory of СТО [X] - high priority
+5. Add the theory of OTO and add interstellar as an example [X] - high priority
+6. Add text about time dilation reverse (from given time_0 and time_1 to return the speed of time_1) [X] - medium priority
+7. Fix the numbering of the sections [X] - high priority
+8. Don't forget to add more resources about CTO and OTO [X] - high priority
+9. Try to draw an illustration about OTO [X] - low priority
 10. Increase the quality of the code related to solar system data from the URL (if not in this course, use it in the next) - low priority for this course, extremely high priority for the next course
 11. Add code documentation [X] - high priority

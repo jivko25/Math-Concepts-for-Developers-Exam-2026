@@ -784,3 +784,93 @@ def plot_blackhole(ax, phiFunction, theta_deg=80):
     ax.set_title(f"Black Hole Accretion Disk (Inclination: {theta_deg}°)")
     ax.set_xlabel(r"$\alpha$ (Impact Parameter X)")
     ax.set_ylabel(r"$\beta$ (Impact Parameter Y)")
+
+
+def visualize_gr():
+    # Setup for two plots: One for curvature, one for time dilation
+    fig = plt.figure(figsize=(12, 5))
+    ax1 = fig.add_subplot(121, projection='3d')
+    ax2 = fig.add_subplot(122)
+
+    # --- 1. Spacetime Curvature (The Well) ---
+    x = np.linspace(-5, 5, 100)
+    y = np.linspace(-5, 5, 100)
+    X, Y = np.meshgrid(x, y)
+    R = np.sqrt(X**2 + Y**2)
+    # Schwarzschild-like potential well simulation
+    Z = -1 / (R + 0.5) 
+    
+    ax1.plot_surface(X, Y, Z, cmap='viridis', alpha=0.7)
+    ax1.set_title("Spacetime Curvature ($g_{\mu\\nu}$)")
+    ax1.set_zlim(-2, 0)
+    ax1.axis('off')
+
+    # --- 2. Time Dilation Animation (The Clocks) ---
+    ax2.set_xlim(0, 10)
+    ax2.set_ylim(-1, 1)
+    ax2.set_title("Gravitational Time Dilation")
+    ax2.get_yaxis().set_visible(False)
+    
+    # Far clock (Fast) and Near clock (Slow)
+    far_dot, = ax2.plot([], [], 'go', markersize=15, label='Far Observer ($t_f$)')
+    near_dot, = ax2.plot([], [], 'ro', markersize=15, label='Near Mass ($t_0$)')
+    ax2.legend()
+
+    # Define the physics
+    rs = 1.0  # Schwarzschild radius
+    r_near = 1.5 * rs
+    dilation_factor = np.sqrt(1 - rs / r_near)
+
+    def animate(i):
+        # Far clock moves linearly
+        t_f = i * 0.1
+        far_dot.set_data([t_f % 10], [0.5])
+        
+        # Near clock moves slower by the dilation factor
+        t_0 = (i * 0.1) * dilation_factor
+        near_dot.set_data([t_0 % 10], [-0.5])
+        
+        return far_dot, near_dot
+
+    ani = FuncAnimation(fig, animate, frames=200, interval=40, blit=True)
+    plt.close(fig)
+    return HTML(ani.to_jshtml())
+
+def plot_time_dilation_curve():
+    # Parameters
+    rs = 1.0  # Schwarzschild Radius (normalized)
+    r = np.linspace(1.01 * rs, 10 * rs, 500)  # Distance from center
+    
+    # Calculate Time Dilation Factor: sqrt(1 - rs/r)
+    # This represents how much 1 second for a distant observer 
+    # lasts for someone at distance r.
+    dilation_factor = np.sqrt(1 - rs / r)
+    
+    # Calculate "Time Stretching" (1 / dilation_factor)
+    # This shows how many seconds pass outside for 1 second near the mass.
+    time_stretch = 1 / dilation_factor
+
+    # Create the plots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+    # Chart 1: The Dilation Factor
+    ax1.plot(r, dilation_factor, color='blue', lw=2)
+    ax1.axvline(rs, color='red', linestyle='--', label="Event Horizon ($r_s$)")
+    ax1.set_title("Clock Rate vs. Distance\n(1 = Normal Speed, 0 = Stopped)")
+    ax1.set_xlabel("Distance from center ($r/r_s$)")
+    ax1.set_ylabel("Local Time Rate ($dt_0/dt_f$)")
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+
+    # Chart 2: The "Stretch" (The Infinity at the Horizon)
+    ax2.plot(r, time_stretch, color='purple', lw=2)
+    ax2.axvline(rs, color='red', linestyle='--', label="Event Horizon ($r_s$)")
+    ax2.set_title("Time Stretching\n(Seconds outside per 1 second inside)")
+    ax2.set_xlabel("Distance from center ($r/r_s$)")
+    ax2.set_ylabel("Expansion Factor")
+    ax2.set_ylim(0, 10) # Clipped for readability
+    ax2.grid(True, alpha=0.3)
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.show()

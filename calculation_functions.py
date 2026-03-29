@@ -383,3 +383,96 @@ def twin_paradox(distance_km, speed_kmh):
         "Time_difference_hours": delta_hours,
         "Gamma": gamma,
     }
+
+def calculate_gravitational_dilation(name, mass_kg, radius_m):
+    """
+    Calculates the gravitational time dilation for a specific celestial body.
+    
+    Parameters:
+    name (str): Name of the object (e.g., "Earth", "Sun")
+    mass_kg (float): Mass of the object in kilograms
+    radius_m (float): Radius from the center in meters
+    
+    Returns:
+    None: Prints the Schwarzschild radius, dilation factor, and time offset.
+    """
+    # Physical Constants (SI Units)
+    G = 6.67430e-11  # Universal Gravitational Constant
+    c = 299792458    # Speed of light in a vacuum
+    seconds_in_year = 365.25 * 24 * 3600
+    
+    # 1. Calculate the Schwarzschild Radius (rs = 2GM / c^2)
+    # This is the radius where the event horizon would form for this mass.
+    rs = (2 * G * mass_kg) / (c**2)
+    
+    # 2. Calculate the Dilation Factor (sqrt(1 - rs / r))
+    # This factor tells us the ratio between local time and distant time.
+    # If factor = 0.9, 1 second locally = 0.9 seconds for the distant observer.
+    dilation_factor = math.sqrt(1 - rs / radius_m)
+    
+    # 3. Calculate Time Difference over 1 Year
+    # How many seconds of "extra" time pass in deep space for 1 local year.
+    time_offset_seconds = seconds_in_year * (1 - dilation_factor)
+    
+    print(f"--- Object: {name} ---")
+    print(f"Schwarzschild Radius (rs): {rs:.6f} meters")
+    print(f"Dilation Factor: {dilation_factor:.12f}")
+    print(f"Time difference per year: {time_offset_seconds:.6f} seconds")
+    print("-" * 40)
+
+def calculate_millers_planet_distance():
+    """
+    Approximate Miller's Planet orbital radius using:
+    - gravitational time dilation (Schwarzschild)
+    - special relativity (orbital velocity)
+    
+    Returns distance in kilometers.
+    """
+
+    # Constants
+    c = 299792.458  # km/s
+
+    # Gargantua mass (100 million solar masses)
+    M_sun = 1.98847e30  # kg
+    G = 6.67430e-20     # km^3 / kg / s^2
+    M = 100e6 * M_sun
+
+    # Schwarzschild radius
+    rs = 2 * G * M / (c**2)
+
+    # Time dilation target
+    t_proper = 1  # hour
+    t_far = 7 * 365.25 * 24  # hours
+
+    dilation = t_proper / t_far  # ~1/61320
+
+    # --- Assumption ---
+    # Split dilation between gravity and velocity
+    # This is an approximation (not exact Kerr solution)
+
+    # Try a realistic orbital velocity near Kerr BH
+    v_fraction = 0.9995  # v ≈ 99.95% of c
+
+    gamma = 1 / math.sqrt(1 - v_fraction**2)
+
+    # Total dilation ≈ gravitational / gamma
+    # => gravitational factor:
+    grav_factor = dilation * gamma
+
+    # Solve:
+    # grav_factor = sqrt(1 - rs/r)
+    # => r = rs / (1 - grav_factor^2)
+
+    r = rs / (1 - grav_factor**2)
+
+    # Distance above horizon
+    height = r - rs
+
+    print("--- Miller's Planet (Improved Approximation) ---")
+    print(f"Schwarzschild radius: {rs:,.0f} km")
+    print(f"Orbital radius: {r:,.0f} km")
+    print(f"Height above horizon: {height:,.2f} km")
+    print(f"Orbital speed: {v_fraction*100:.4f}% of c")
+    print(f"Lorentz gamma: {gamma:.2f}")
+
+    return r, height
