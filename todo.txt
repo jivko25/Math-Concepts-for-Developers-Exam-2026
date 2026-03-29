@@ -8,3 +8,4 @@
 8. Don't forget to add more resources about CTO and OTO [] - high priority
 9. Try to draw an illustration about OTO [] - low priority
 10. Increase the quality of the code related to solar system data from the URL (if not in this course, use it in the next) - low priority for this course, extremely high priority for the next course
+11. Add code documentation [X] - high priority
